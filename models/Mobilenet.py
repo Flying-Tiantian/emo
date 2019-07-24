@@ -27,7 +27,7 @@ class Mobilenet_model:
 
     def __call__(self, x, trainable=True, is_training=True, reuse=False):
         tf.summary.image('input_images', x, max_outputs=20)
-        with tf.variable_scope(self._name):
+        with tf.variable_scope(self._name, reuse=reuse):
             filters = 32
             x = tf.layers.conv2d(x, filters=int(filters*self._width_multiplier), kernel_size=3, strides=2, padding='same', trainable=trainable, name='conv')
 
