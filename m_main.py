@@ -79,7 +79,7 @@ def make_model_fn(model_class, decay_steps, model_dir):
 
             if mode == tf.estimator.ModeKeys.TRAIN:
 
-                train_op = tf.train.AdamOptimizer(lr).minimize(loss)
+                train_op = tf.train.AdamOptimizer(lr).minimize(loss, global_step=global_step)
 
                 tf.identity(accuracy[1], name='train_accuracy')
                 tf.summary.scalar('train_accuracy', accuracy[1])
