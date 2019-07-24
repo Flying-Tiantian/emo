@@ -79,7 +79,7 @@ def make_model_fn(model_class, decay_steps, model_dir):
 
             if mode == tf.estimator.ModeKeys.TRAIN:
 
-                train_op = tf.train.AdamOptimizer(lr).minimize()
+                train_op = tf.train.AdamOptimizer(lr).minimize(loss)
 
                 tf.identity(accuracy[1], name='train_accuracy')
                 tf.summary.scalar('train_accuracy', accuracy[1])
@@ -101,7 +101,7 @@ def make_model_fn(model_class, decay_steps, model_dir):
 
 
 def train_and_eval():
-    dataset_gen = dataset_generator(flags.FLAGS.task if flags.FLAGS.mode == 'secondary_inference' else flags.FLAGS.task)
+    dataset_gen = dataset_generator(flags.FLAGS.task)
     num_classes = dataset_gen.get_class_num()
 
     model_dir = os.path.join(flags.FLAGS.model_dir, flags.FLAGS.task + '_' + flags.FLAGS.target_model)
@@ -177,7 +177,7 @@ def define_flags():
         help='Initial learning rate.')
     flags.DEFINE_integer('batch_size', default=128, lower_bound=0,
                          help='Batch size.')
-    flags.DEFINE_integer('train_epochs', default=250, lower_bound=0,
+    flags.DEFINE_integer('train_epochs', default=500, lower_bound=0,
                          help='The epoch num for train.')
     flags.DEFINE_integer('decay_epochs', default=50000, lower_bound=0,
                          help='Epoch number between lr decay.')
@@ -185,7 +185,8 @@ def define_flags():
                          help='Eval between how many epochs.')
 
     flags.DEFINE_string(
-        name='model_dir', default='data')
+        name='model_dir', default='data',
+        help='The root data dir.')
 
 
 def main(_):
