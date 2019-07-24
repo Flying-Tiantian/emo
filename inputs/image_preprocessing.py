@@ -105,7 +105,7 @@ def preprocess_image(inputs, output_height, output_width, square=True,
 
         if rand:
             image = _bbox_crop(image, _sample_bbox(image, bbox))
-            image = tf.image.random_flip_left_right(image)
+            # image = tf.image.random_flip_left_right(image)
     else:
         image = _bbox_crop(image, bbox)
 
