@@ -40,7 +40,7 @@ def input_fn(is_training,
 
     def _parse_function(path, label):
         raw = tf.read_file(path)
-        return preprocess_image(raw, image_size, image_size, is_training=is_training), label
+        return preprocess_image(raw, image_size, image_size, num_channels=1, is_training=is_training), label
 
     dataset = dataset.map(_parse_function)
     dataset = dataset.shuffle(1000).repeat(num_epochs).batch(batch_size)
