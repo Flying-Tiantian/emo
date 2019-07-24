@@ -89,9 +89,6 @@ def make_model_fn(model_class, decay_steps, model_dir):
                 return tf.estimator.EstimatorSpec(mode, loss=loss, train_op=train_op)
 
             elif mode == tf.estimator.ModeKeys.EVAL:
-                # tf.summary.scalar('accuracy', accuracy[1])
-                # tf.summary.scalar('test_accuracy_top_5', accuracy_top_5[1])
-
                 eval_summary_hook = tf.train.SummarySaverHook(
                                 save_steps=2**31, # only save at the first step
                                 output_dir= os.path.join(model_dir, "eval"),
@@ -104,103 +101,17 @@ def make_model_fn(model_class, decay_steps, model_dir):
 
 
 def train_and_eval():
-    dataset_gen = dataset_generator(flags.FLAGS.secondary_task if flags.FLAGS.mode == 'secondary_inference' else flags.FLAGS.task)
+    dataset_gen = dataset_generator(flags.FLAGS.task if flags.FLAGS.mode == 'secondary_inference' else flags.FLAGS.task)
     num_classes = dataset_gen.get_class_num()
-    
-    target_model = None
-    target_model_trainable = False
-    target_model_dir=None
-
-    transform_model = None
-    transform_model_trainable = False
-    transform_model_dir = None
-
-    invert_model = None
-    invert_model_trainable = False
-    invert_model_dir = None
-
-    slm_l1=0.0
-    slm_anti_invert=0.0
 
     model_dir = os.path.join(flags.FLAGS.model_dir, flags.FLAGS.task + '_' + flags.FLAGS.target_model)
 
-    # ['fresh_train', 'train', 'finetune', 'invert', 'secondary_inference']
-    if flags.FLAGS.mode == 'fresh_train':
-        target_model = clas_models[flags.FLAGS.target_model](num_classes=num_classes)
+    target_model = clas_models[flags.FLAGS.target_model](num_classes=num_classes)
 
-        model_dir = os.path.join(model_dir, 'fresh_train')
-        target_model_trainable = True
+    model_dir = os.path.join(model_dir, 'fresh_train')
+    target_model_trainable = True
 
-    elif flags.FLAGS.mode == 'train':
-        assert flags.FLAGS.transform_model is not None
-
-        target_model = clas_models[flags.FLAGS.target_model](num_classes=num_classes)
-
-        target_model_dir = os.path.join(model_dir, 'fresh_train')
-        model_dir = os.path.join(model_dir, 'train')
-
-        model_type, layer_num, conv_num_per_layer, channels_root, slm_l1 = flags.FLAGS.transform_model.split('_')
-        transform_model = tran_models[model_type](layer_num=int(layer_num), conv_num_per_layer=int(conv_num_per_layer), channels_root=int(channels_root))
-        transform_model_trainable = True
-
-        transform_model_dir = os.path.join(flags.FLAGS.model_dir, 'asis_%s_%s_%s_%s' % (model_type, layer_num, conv_num_per_layer, channels_root))
-        if not os.path.exists(transform_model_dir):
-            transform_model_dir = None
-
-        if flags.FLAGS.invert_model is not None:
-            model_type, layer_num, conv_num_per_layer, channels_root, slm_anti_invert = flags.FLAGS.invert_model.split('_')
-            invert_model = tran_models[model_type](layer_num=int(layer_num), conv_num_per_layer=int(conv_num_per_layer), channels_root=int(channels_root))
-            invert_model_trainable = True
-
-        model_dir = os.path.join(model_dir, flags.FLAGS.transform_model + str(flags.FLAGS.invert_model))
-
-    elif flags.FLAGS.mode == 'finetune':
-        assert flags.FLAGS.transform_model is not None
-
-        target_model = clas_models[flags.FLAGS.target_model](num_classes=num_classes)
-
-        target_model_dir = os.path.join(model_dir, 'fresh_train')
-        target_model_trainable = True
-
-        transform_model_dir = os.path.join(model_dir, 'train', flags.FLAGS.transform_model + str(flags.FLAGS.invert_model))
-        model_type, layer_num, conv_num_per_layer, channels_root, slm_l1 = flags.FLAGS.transform_model.split('_')
-        transform_model = tran_models[model_type](layer_num=int(layer_num), conv_num_per_layer=int(conv_num_per_layer), channels_root=int(channels_root))
-
-        model_dir = os.path.join(model_dir, 'finetune', flags.FLAGS.transform_model + str(flags.FLAGS.invert_model))
-    
-    elif flags.FLAGS.mode == 'invert':
-        assert flags.FLAGS.transform_model is not None
-        assert flags.FLAGS.invert_model is not None
-
-        transform_model_dir = os.path.join(model_dir, 'train', flags.FLAGS.transform_model + None)
-        model_type, layer_num, conv_num_per_layer, channels_root, slm_l1 = flags.FLAGS.transform_model.split('_')
-        transform_model = tran_models[model_type](layer_num=int(layer_num), conv_num_per_layer=int(conv_num_per_layer), channels_root=int(channels_root))
-
-        model_type, layer_num, conv_num_per_layer, channels_root, slm_anti_invert = flags.FLAGS.invert_model.split('_')
-        invert_model = tran_models[model_type](layer_num=int(layer_num), conv_num_per_layer=int(conv_num_per_layer), channels_root=int(channels_root))
-        invert_model_trainable = True
-
-        model_dir = os.path.join(model_dir, 'invert', flags.FLAGS.transform_model + flags.FLAGS.invert_model)
-
-    elif flags.FLAGS.mode == 'secondary_inference':
-        assert flags.FLAGS.transform_model is not None
-
-        target_model = clas_models[flags.FLAGS.secondary_model](num_classes=num_classes)
-        target_model_trainable = True
-
-        target_model_dir = os.path.join(flags.FLAGS.model_dir, flags.FLAGS.secondary_task + '_' + flags.FLAGS.secondary_model, 'fresh_train')
-        transform_model_dir = os.path.join(model_dir, 'train', flags.FLAGS.transform_model + str(flags.FLAGS.invert_model))
-        model_type, layer_num, conv_num_per_layer, channels_root, slm_l1 = flags.FLAGS.transform_model.split('_')
-        transform_model = tran_models[model_type](layer_num=int(layer_num), conv_num_per_layer=int(conv_num_per_layer), channels_root=int(channels_root))
-
-        model_dir = os.path.join(model_dir, 'secondary_inference', flags.FLAGS.secondary_task + '_' + flags.FLAGS.secondary_model, flags.FLAGS.transform_model + str(flags.FLAGS.invert_model))
-
-    model_class = Model(
-        target_model=target_model, target_model_trainable=target_model_trainable, 
-        transform_model=transform_model, transform_model_trainable=transform_model_trainable, 
-        invert_model=invert_model, invert_model_trainable=invert_model_trainable, 
-        slm_l1=float(slm_l1), slm_anti_invert=float(slm_anti_invert)
-    )
+    model_class = target_model
 
     train_example_num, _ = dataset_gen.get_image_num()
     decay_steps = compute_decay_steps(flags.FLAGS.batch_size, train_example_num, flags.FLAGS.decay_epochs)
@@ -213,10 +124,6 @@ def train_and_eval():
             'cross_entropy': 'cross_entropy',
             'total_loss': 'total_loss'},
         every_n_iter=100))
-
-    train_hooks.append(RestoreHook(target_model_dir, 'target_model'))
-    train_hooks.append(RestoreHook(transform_model_dir, 'transform_model'))
-    train_hooks.append(RestoreHook(invert_model_dir, 'invert_model'))
 
     tf_config = tf.ConfigProto()  
     tf_config.gpu_options.allow_growth = True
@@ -252,31 +159,13 @@ def train_and_eval():
 
 def define_flags():
     flags.DEFINE_enum(
-        name='task', default='celeba_match',
-        enum_values=['celeba_match', 'celeba_attr', 'cifar10', 'imagenet', 'mnist', 'voc', 'lfw_gender', 'lfw_id', 'cifar100', 'cifar100_coarse', 'cifar100_coarse5', 'cifar100_fine0', 'cifar100_fine5'],
+        name='task', default='mug_fed',
+        enum_values=['mug_fed'],
         help='Which dataset to use, and what task to do.')
     flags.DEFINE_enum(
-        name='target_model', default='match',
-        enum_values=['match_resnet18', 'match_vgga', 'match', 'lenet', 'resnet18', 'resnet50', 'resnet20', 'resnet20_128', 'resnet56', 'resnet56_64', 'vgga', 'vgg16', 'vgg19', 'mobilenet'],
+        name='target_model', default='mobilenet',
+        enum_values=['mobilenet'],
         help='Which target model to use.')
-    flags.DEFINE_enum(
-        name='mode', default='fresh_train',
-        enum_values=['fresh_train', 'train', 'finetune', 'invert', 'secondary_inference'],
-        help='Predefined execution mode.')
-    flags.DEFINE_string(
-        name='transform_model', default=None,
-        help='Model to generate reduced image, format {type_%%d_%%d_%%d_%%f}.')
-    flags.DEFINE_string(
-        name='invert_model', default=None,
-        help='Model to recover image, format {type_%%d_%%d_%%d_%%f}.')
-    flags.DEFINE_enum(
-        name='secondary_task', default=None,
-        enum_values=['celeba_match', 'celeba_attr', 'cifar10', 'imagenet', 'mnist', 'voc', 'lfw_gender', 'lfw_id', 'cifar100', 'cifar100_coarse', 'cifar100_coarse5', 'cifar100_fine0', 'cifar100_fine5'],
-        help='Choose secondary task.')
-    flags.DEFINE_enum(
-        name='secondary_model', default='lenet',
-        enum_values=['match_resnet18', 'match_vgga', 'match', 'lenet', 'resnet18', 'resnet50', 'resnet20', 'resnet20_128', 'resnet56', 'resnet56_64', 'vgga', 'vgg16', 'vgg19', 'mobilenet'],
-        help='Choose secondary model.')
     flags.DEFINE_boolean(
         name='eval_only', default=False,
         help='Skip training and only perform evaluation on the latest checkpoint.')
@@ -292,7 +181,7 @@ def define_flags():
                          help='The epoch num for train.')
     flags.DEFINE_integer('decay_epochs', default=50000, lower_bound=0,
                          help='Epoch number between lr decay.')
-    flags.DEFINE_integer('epochs_between_evals', default=20, lower_bound=0,
+    flags.DEFINE_integer('epochs_between_evals', default=1, lower_bound=0,
                          help='Eval between how many epochs.')
 
     flags.DEFINE_string(
