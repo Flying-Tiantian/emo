@@ -10,6 +10,7 @@ from inputs.dataset_gen import dataset_generator
 
 clas_models = {
     'mobilenet': Mobilenet_model,
+    'mobilenet160': Mobilenet_160_model
 }
 
 
@@ -164,7 +165,7 @@ def define_flags():
         help='Which dataset to use, and what task to do.')
     flags.DEFINE_enum(
         name='target_model', default='mobilenet',
-        enum_values=['mobilenet'],
+        enum_values=['mobilenet', 'mobilenet160'],
         help='Which target model to use.')
     flags.DEFINE_boolean(
         name='eval_only', default=False,
