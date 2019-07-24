@@ -160,7 +160,7 @@ def train_and_eval():
 def define_flags():
     flags.DEFINE_enum(
         name='task', default='mug_fed',
-        enum_values=['mug_fed'],
+        enum_values=['mug_fed', 'mug_fed_crop'],
         help='Which dataset to use, and what task to do.')
     flags.DEFINE_enum(
         name='target_model', default='mobilenet',
