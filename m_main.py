@@ -170,7 +170,7 @@ def define_flags():
         name='eval_only', default=False,
         help='Skip training and only perform evaluation on the latest checkpoint.')
     flags.DEFINE_float(
-        name='weight_decay', short_name='wd', default=0.0,
+        name='weight_decay', short_name='wd', default=1e-4,
         help='Weight decay coefficient for l2 regularization.')
     flags.DEFINE_float(
         name='learning_rate', short_name='lr', default=0.001, lower_bound=0.0,
@@ -181,7 +181,7 @@ def define_flags():
                          help='The epoch num for train.')
     flags.DEFINE_integer('decay_epochs', default=50000, lower_bound=0,
                          help='Epoch number between lr decay.')
-    flags.DEFINE_integer('epochs_between_evals', default=1, lower_bound=0,
+    flags.DEFINE_integer('epochs_between_evals', default=5, lower_bound=0,
                          help='Eval between how many epochs.')
 
     flags.DEFINE_string(
