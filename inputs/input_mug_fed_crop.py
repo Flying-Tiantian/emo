@@ -15,9 +15,9 @@ DATA_DIR = os.path.join('data', 'mug_fed_data')
 
 def creat_list(data_dir, is_training):
     dirname = 'train' if is_training else 'test'
-    dirpath = os.path.join(data_dir, dirname)
+    dirpath = os.path.join(data_dir, dirname+'_crop_eye')
 
-    with open(os.path.join(dirpath, dirname+'_crop_eye.txt'), 'r') as f:
+    with open(os.path.join(dirpath, dirname+'txt'), 'r') as f:
         examples = f.readlines()
 
     paths = []
