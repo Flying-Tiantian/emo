@@ -47,6 +47,10 @@ class Mobilenet_160_model(Mobilenet_model):
     def __init__(self, num_classes=10, width_multiplier=1.0, resolution_multiplier=0.714):
         super().__init__(num_classes=num_classes, width_multiplier=width_multiplier, resolution_multiplier=resolution_multiplier)
 
+class Mobilenet_64_model(Mobilenet_model):
+    def __init__(self, num_classes=10, width_multiplier=1.0, resolution_multiplier=0.2857):
+        super().__init__(num_classes=num_classes, width_multiplier=width_multiplier, resolution_multiplier=resolution_multiplier)
+
 if __name__ == '__main__':
     
     model = Mobilenet_model(resolution_multiplier=0.714)

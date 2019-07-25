@@ -10,7 +10,8 @@ from inputs.dataset_gen import dataset_generator
 
 clas_models = {
     'mobilenet': Mobilenet_model,
-    'mobilenet160': Mobilenet_160_model
+    'mobilenet160': Mobilenet_160_model,
+    'mobilenet64': Mobilenet_64_model
 }
 
 
@@ -164,14 +165,14 @@ def define_flags():
         enum_values=['mug_fed', 'mug_fed_crop'],
         help='Which dataset to use, and what task to do.')
     flags.DEFINE_enum(
-        name='target_model', default='mobilenet',
-        enum_values=['mobilenet', 'mobilenet160'],
+        name='target_model', default='mobilenet160',
+        enum_values=['mobilenet', 'mobilenet160', 'mobilenet64'],
         help='Which target model to use.')
     flags.DEFINE_boolean(
         name='eval_only', default=False,
         help='Skip training and only perform evaluation on the latest checkpoint.')
     flags.DEFINE_float(
-        name='weight_decay', short_name='wd', default=1e-4,
+        name='weight_decay', short_name='wd', default=2e-4,
         help='Weight decay coefficient for l2 regularization.')
     flags.DEFINE_float(
         name='learning_rate', short_name='lr', default=0.001, lower_bound=0.0,
