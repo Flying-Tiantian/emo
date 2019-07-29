@@ -6,24 +6,26 @@ from .image_preprocessing import preprocess_image
 PROPERTIES = {
     'num_classes': 7,
     'num_images': {
-        'train': 5055,
-        'val': 859,
+        'train': 5242,
+        'val': 672,
     }
 }
 
 DATA_DIR = os.path.join('data', 'mug_fed_data')
 
+LABEL_DICT = {'anger': 0, 'disgust': 1, 'fear': 2, 'happiness': 3, 'neutral': 4, 'sadness': 5, 'surprise': 6}
+
 def creat_list(data_dir, is_training):
     dirname = 'train' if is_training else 'test'
     dirpath = os.path.join(data_dir, dirname)
 
-    with open(os.path.join(dirpath, dirname+'.txt'), 'r') as f:
-        examples = f.readlines()
+    examples = sorted(os.listdir(dirpath))
 
     paths = []
     labels = []
     for example in examples:
-        filename, label = example.split()
+        filename = example
+        label = LABEL_DICT[example.split('_')[0]]
         paths.append(os.path.join(dirpath, filename))
         labels.append(int(label))
 
