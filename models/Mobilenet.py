@@ -15,7 +15,7 @@ class Mobilenet_model:
         return self._default_input_size
 
     def _depthwise_layer(self, x, filters, strides, is_training, trainable):
-        x = tf.layers.separable_conv2d(x, filters=x.shape[-1].value, kernel_size=3, strides=strides, padding='same', trainable=trainable)
+        x = tf.nn.depthwise_conv2d(x, tf.get_variable('dw_conv_k', [3, 3, x.shape[-1].value,1], trainable=trainable), strides=[1, strides, strides, 1], padding='SAME', name='dw_conv')
         x = tf.layers.batch_normalization(x, training=is_training, trainable=trainable, name='bn0')
         x = tf.nn.relu(x)
 
