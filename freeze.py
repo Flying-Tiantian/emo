@@ -10,12 +10,7 @@ outputs = tf.identity(logits, 'outputs')
 
 
 sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
-saver = tf.train.Saver()
-
-ckpt = tf.train.get_checkpoint_state('data/mug_fed_mobilenet64/fresh_train/')
-
-if ckpt and ckpt.model_checkpoint_path:
-    saver.restore(sess, ckpt.model_checkpoint_path)
+sess.run(tf.global_variables_initializer())
 
 graph = tf.get_default_graph()
 
