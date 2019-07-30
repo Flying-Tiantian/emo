@@ -1,10 +1,11 @@
+import os
 import tensorflow as tf
 from tensorflow import graph_util
-from models import Mobilenet_64_model
+from models import Inception_model
 
 
 input_image_shape = tf.placeholder(dtype=tf.float32, shape=[None, 64, 64, 1], name='inputs')
-logits = Mobilenet_64_model(num_classes=7)(input_image_shape)
+logits = Inception_model(num_classes=7)(input_image_shape)
 outputs = tf.identity(logits, 'outputs')
 # predicted_classes = tf.argmax(logits, axis=1, name='outputs')
 
@@ -24,5 +25,5 @@ output_graph_def = graph_util.convert_variables_to_constants(
 
 # # Finally we serialize and dump the output graph to the filesystem
 
-with tf.gfile.GFile('mobilenet64.pb', "wb") as f:
+with tf.gfile.GFile(os.path.join('data', 'Inception_V3_64.pb'), "wb") as f:
     f.write(output_graph_def.SerializeToString())
