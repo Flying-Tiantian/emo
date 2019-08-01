@@ -405,7 +405,7 @@ def __variable_summaries(var):
 
 class ShuffleNet_model:
     """ShuffleNet is implemented here!"""
-    def __init__(self, num_classes=7, num_groups=1, weight_decay=0.0):
+    def __init__(self, num_classes=7, num_groups=3, weight_decay=0.0):
         self._num_classes = num_classes
         self._name = 'Shufflenet'
         self._weight_decay = weight_decay
