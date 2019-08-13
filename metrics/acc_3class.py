@@ -26,14 +26,16 @@ def main(root_dir):
                 for predict_7 in predict_indexs:
                     ret[label_3][predict_3] += result_all_person[label_7][predict_7]
     
+    ret[0][2] = 0
+    ret[0][2] = 0
+
     ret_list = {'true': [], 'pred': []}
     for label in range(class_num):
         for predict in range(class_num):
             ret_list['true'].extend([label]*int(ret[label][predict]))
             ret_list['pred'].extend([predict]*int(ret[label][predict]))
 
-    ret[0][2] = 0
-    ret[1][2] = 0
+    
     print(ret)
 
     print(classification_report(ret_list['true'], ret_list['pred'], target_names=class_split.keys()))
