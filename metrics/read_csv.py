@@ -18,14 +18,20 @@ def read_result(root_dir):
 
         result_of_person = np.zeros((7, 7))
 
-        for emotion_csv in sorted(os.listdir(os.path.join(root_dir, person_dir, 'result'))):
+        result_dir_name = 'result'
+        for files in sorted(os.listdir(os.path.join(root_dir, person_dir))):
+            if 'result' in files:
+                result_dir_name = files
+                break
+
+        for emotion_csv in sorted(os.listdir(os.path.join(root_dir, person_dir, result_dir_name))):
             if not emotion_csv.endswith('.cvs'):
                 continue
 
             label_index = str2emotion_index(emotion_csv)
 
-            print('Reading %s ...' % os.path.join(root_dir, person_dir, 'result', emotion_csv))
-            with open(os.path.join(root_dir, person_dir, 'result', emotion_csv), 'r') as f:
+            print('Reading %s ...' % os.path.join(root_dir, person_dir, result_dir_name, emotion_csv))
+            with open(os.path.join(root_dir, person_dir, result_dir_name, emotion_csv), 'r') as f:
                 content = f.readlines()
 
             for line in content[1:]:
