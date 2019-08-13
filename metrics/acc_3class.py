@@ -37,8 +37,7 @@ def main(root_dir):
             ret_list['true'].extend([label]*int(ret[label][predict]))
             ret_list['pred'].extend([predict]*int(ret[label][predict]))
 
-    print(len(ret_list['true']))
-    print(len(ret_list['pred']))
+    print(class_split.keys())
 
     print(classification_report(ret_list['true'], ret_list['pred'], labels=class_split.keys()))
 
