@@ -19,7 +19,7 @@ def read_result(root_dir):
         result_of_person = np.zeros((7, 7))
 
         for emotion_csv in sorted(os.listdir(os.path.join(root_dir, person_dir, 'result'))):
-            if not '.cvs' in emotion_csv:
+            if not emotion_csv.endswith('.cvs'):
                 continue
 
             label_index = str2emotion_index(emotion_csv)
