@@ -16,8 +16,6 @@ def main(root_dir):
     result_per_person = read_result(root_dir)
 
     result_all_person = np.sum(list(result_per_person.values()), axis=0)
-    print('result_all_person')
-    print(result_all_person)
 
     class_num = len(class_split)
     ret = np.zeros((class_num, class_num), dtype=int)
@@ -27,9 +25,6 @@ def main(root_dir):
             for label_7 in label_indexs:
                 for predict_7 in predict_indexs:
                     ret[label_3][predict_3] += result_all_person[label_7][predict_7]
-
-    print('result 3 class')
-    print(ret)
     
     ret_list = {'true': [], 'pred': []}
     for label in range(class_num):
@@ -37,9 +32,7 @@ def main(root_dir):
             ret_list['true'].extend([label]*int(ret[label][predict]))
             ret_list['pred'].extend([predict]*int(ret[label][predict]))
 
-    print(class_split.keys())
-
-    print(classification_report(ret_list['true'], ret_list['pred'], labels=class_split.keys()))
+    print(classification_report(ret_list['true'], ret_list['pred'], target_names=class_split.keys()))
 
 
 
