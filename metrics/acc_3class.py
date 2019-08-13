@@ -20,7 +20,7 @@ def main(root_dir):
     print(result_all_person)
 
     class_num = len(class_split)
-    ret = np.zeros((class_num, class_num))
+    ret = np.zeros((class_num, class_num), dtype=int)
 
     for label_3, label_indexs in enumerate(class_split.values()):
         for predict_3, predict_indexs in enumerate(class_split.values()):
@@ -36,6 +36,9 @@ def main(root_dir):
         for predict in range(class_num):
             ret_list['true'].extend([label]*int(ret[label][predict]))
             ret_list['pred'].extend([predict]*int(ret[label][predict]))
+
+    print(len(ret_list['true']))
+    print(len(ret_list['pred']))
 
     print(classification_report(ret_list['true'], ret_list['pred'], labels=class_split.keys()))
 

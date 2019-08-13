@@ -16,7 +16,7 @@ def read_result(root_dir):
         if not '_short_movie' in person_dir:
             continue
 
-        result_of_person = np.zeros((7, 7))
+        result_of_person = np.zeros((7, 7), dtype=int)
 
         result_dir_name = 'result'
         for files in sorted(os.listdir(os.path.join(root_dir, person_dir))):
