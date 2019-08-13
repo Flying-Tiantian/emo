@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import pprint
 from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score
-from .read_csv import read_result
+from read_csv import read_result
 
 
 emotions = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']
