@@ -27,7 +27,7 @@ def main(root_dir):
                     ret[label_3][predict_3] += result_all_person[label_7][predict_7]
     
     ret[0][2] = 0
-    ret[0][2] = 0
+    ret[1][2] = 0
 
     ret_list = {'true': [], 'pred': []}
     for label in range(class_num):
