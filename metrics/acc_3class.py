@@ -29,8 +29,8 @@ def main(root_dir):
     ret_list = {'true': [], 'pred': []}
     for label in range(class_num):
         for predict in range(class_num):
-            ret_list['true'].extend([label]*ret[label][predict])
-            ret_list['pred'].extend([predict]*ret[label][predict])
+            ret_list['true'].extend([label]*int(ret[label][predict]))
+            ret_list['pred'].extend([predict]*int(ret[label][predict]))
 
     print(classification_report(ret_list['true'], ret_list['pred'], labels=class_split.keys()))
 
