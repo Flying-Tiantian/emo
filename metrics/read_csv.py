@@ -24,7 +24,7 @@ def read_result(root_dir):
 
             label_index = str2emotion_index(emotion_csv)
 
-            with open(os.path.join(root_dir, person_dir, 'result', emotion_csv), 'r') as f:
+            with open(os.path.join(root_dir, person_dir, 'result', emotion_csv), 'rb') as f:
                 content = f.readlines()
 
             for line in content[1:]:
