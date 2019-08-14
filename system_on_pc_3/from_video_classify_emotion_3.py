@@ -109,7 +109,7 @@ def main(root_dir):
         for person_dir in person_dirs:
             person_name = person_dir.split('_')[0]
 
-            crop_params = np.fromfile(os.path.join(person_dir, 'crop_param.npy'), dtype=float, sep='|')
+            crop_params = np.fromfile(os.path.join(root_dir, person_dir, 'crop_param.npy'), dtype=float, sep='|')
             crop_params = tuple(crop_params)
 
             features_dir = os.path.join(RESULT_PATH, person_dir, 'features_3')

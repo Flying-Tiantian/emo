@@ -10,7 +10,7 @@ def read_video(video_path):
         ret, frame = video_capture.read()
         if not ret:
             return
-        yield frame, video_capture.get(cv2.cv.CV_CAP_PROP_POS_MSEC)
+        yield frame, video_capture.get(cv2.CAP_PROP_POS_MSEC)
 
 
 def crop_eye(image, crop_params):
