@@ -94,6 +94,7 @@ def frame2emotion(sess, frame, centers, R):
 
 
 def main(root_dir):
+    os.mkdirs(RESULT_PATH, exist_ok=True)
     with tf.Session() as sess:
         print("load graph")
         with open(MODEL,'rb') as f:
@@ -113,6 +114,7 @@ def main(root_dir):
             crop_params = tuple(crop_params)
 
             features_dir = os.path.join(RESULT_PATH, person_dir, 'features_3')
+            os.mkdirs(features_dir, exist_ok=True)
 
             generate_one_person_label_features(sess, os.path.join(root_dir, person_dir), features_dir)
             centers, R = load_kmeans_find_R(features_dir)
