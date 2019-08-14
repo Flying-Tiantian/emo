@@ -125,7 +125,11 @@ def main(root_dir):
                 video_path = os.path.join(video_dir_path, video_name)
 
                 emotion = video_name.split('.')[0]
-                save_path = os.path.join(RESULT_PATH, person_dir, 'result', str(emotion) + '.cvs')
+
+                result_dir = os.path.join(RESULT_PATH, person_dir, 'result')
+                os.makedirs(result_dir, exist_ok=True)
+                save_path = os.path.join(result_dir, str(emotion) + '.cvs')
+                
                 with open(save_path , 'w') as f:
                     f.write('emotion,weights' + '\n')
                     second = 0
