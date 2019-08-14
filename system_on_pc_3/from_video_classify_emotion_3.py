@@ -15,7 +15,7 @@ SAMPLE_RATE = 1
 PERSONS = []
 FEATURES_DIR = 'features_3'
 MODEL = 'minimal_graph.proto'
-RESULT_PATH = '~/nemo_short_movie_results_3'
+RESULT_PATH = '/home/tian/nemo_short_movie_results_3'
 
 EMOTION_NUM = reindex_labels('')
 
@@ -117,6 +117,11 @@ def main(root_dir):
                 shutil.rmtree(features_dir)
             os.makedirs(features_dir, exist_ok=True)
 
+            result_dir = os.path.join(RESULT_PATH, person_dir, 'result')
+            if os.path.exists(result_dir):
+                shutil.rmtree(result_dir)
+            os.makedirs(result_dir, exist_ok=True)
+
             generate_one_person_label_features(sess, os.path.join(root_dir, person_dir), features_dir)
 
             print("Predicting emotion of %s..." % person_name)
@@ -131,10 +136,6 @@ def main(root_dir):
 
                 emotion = video_name.split('.')[0].split('_')[0]
 
-                result_dir = os.path.join(RESULT_PATH, person_dir, 'result')
-                if os.path.exists(result_dir):
-                    shutil.rmtree(result_dir)
-                os.makedirs(result_dir, exist_ok=True)
                 save_path = os.path.join(result_dir, str(emotion) + '.cvs')
 
                 with open(save_path , 'w') as f:
@@ -149,6 +150,7 @@ def main(root_dir):
                                 label = frame2emotion(sess, frame, centers, R)
                                 label_temp[label] += 1
                                 print("\rSecond: %d" % second, end='')
+                                print('')
                             else:
                                 label_second = np.argmax(label_temp)
                                 weights = label_temp[label_second]/sum(label_temp)
