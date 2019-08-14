@@ -116,6 +116,8 @@ def main(root_dir):
             os.makedirs(features_dir, exist_ok=True)
 
             generate_one_person_label_features(sess, os.path.join(root_dir, person_dir), features_dir)
+
+            print("Predicting emotion of %s..." % person_name)
             centers, R = load_kmeans_find_R(features_dir)
 
             video_dir_path = os.path.join(root_dir, person_dir, 'video_'+person_name+'_eye', 'test')
@@ -123,13 +125,14 @@ def main(root_dir):
                 if not ('.mp4' in video_name or '.mov' in video_name):
                     continue
                 video_path = os.path.join(video_dir_path, video_name)
+                print("Processing video file %s..." % video_path)
 
                 emotion = video_name.split('.')[0]
 
                 result_dir = os.path.join(RESULT_PATH, person_dir, 'result')
                 os.makedirs(result_dir, exist_ok=True)
                 save_path = os.path.join(result_dir, str(emotion) + '.cvs')
-                
+
                 with open(save_path , 'w') as f:
                     f.write('emotion,weights' + '\n')
                     second = 0
@@ -141,6 +144,7 @@ def main(root_dir):
                             if int(time/1000) == second:
                                 label = frame2emotion(sess, frame, centers, R)
                                 label_temp[label] += 1
+                                print("\rSecond: %d" % second, end='')
                             else:
                                 label_second = np.argmax(label_temp)
                                 weights = label_temp[label_second]/sum(label_temp)

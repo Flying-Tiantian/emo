@@ -47,6 +47,7 @@ def get_person_dirs(root_dir, persons):
 
 def deal_one_person(sess, person_dir, features_dir):
     person_name = os.path.split(person_dir)[-1].split('_')[0]
+    print("Generating label features for %s..." % person_name)
     video_dir_path = os.path.join(person_dir, 'video_'+person_name+'_eye', 'label_cut')
     crop_params = np.fromfile(os.path.join(person_dir, 'crop_param.npy'), dtype=float, sep='|')
     crop_params = tuple(crop_params)
@@ -54,6 +55,7 @@ def deal_one_person(sess, person_dir, features_dir):
         if not ('.mp4' in video_name or '.mov' in video_name):
             continue
         video_path = os.path.join(video_dir_path, video_name)
+        print("Processing video file %s..." % video_path)
         extract_label_features(sess, video_path, crop_params, os.path.join(features_dir, str(reindex_labels(video_name))+'.txt'))
 
 
