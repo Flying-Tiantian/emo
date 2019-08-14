@@ -1,11 +1,18 @@
 import os
 import numpy as np
 
+
 def str2emotion_index(s):
-    emotions = ['anger', 'disgust', 'fear', 'happiness', 'sadness', 'surprise', 'neutral']
-    for i, e in enumerate(emotions):
-        if e in s:
-            return i
+    emotion_dict = {'anger' : 1,
+                    'disgust' : 1,
+                    'fear' : 1,
+                    'happiness' : 0,
+                    'neutral' : 2,
+                    'sadness' : 1,
+                    'surprise': 0}
+    for k in emotion_dict:
+        if k in s:
+            return emotion_dict[k]
 
     raise ValueError('Input string does not contain any emotions!')
 

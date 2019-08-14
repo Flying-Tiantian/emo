@@ -12,7 +12,7 @@ class_split = {'positive': [0, 1, 2, 4],
                'neutral': [6]}
 
 
-def main(root_dir):
+def main_7_to_3(root_dir):
     result_per_person = read_result(root_dir)
 
     result_all_person = np.sum(list(result_per_person.values()), axis=0)
@@ -41,6 +41,27 @@ def main(root_dir):
     print(classification_report(ret_list['true'], ret_list['pred'], target_names=class_split.keys()))
 
 
+def main_3(root_dir):
+    result_per_person = read_result(root_dir)
+
+    result_all_person = np.sum(list(result_per_person.values()), axis=0)
+    class_num = len(result_all_person)
+
+    ret = result_all_person
+    ret[0][2] = 0
+    ret[1][2] = 0
+
+    ret_list = {'true': [], 'pred': []}
+    for label in range(class_num):
+        for predict in range(class_num):
+            ret_list['true'].extend([label]*int(ret[label][predict]))
+            ret_list['pred'].extend([predict]*int(ret[label][predict]))
+
+    
+    print(ret)
+
+    print(classification_report(ret_list['true'], ret_list['pred'], target_names=class_split.keys()))
+
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    main_3(sys.argv[1])
