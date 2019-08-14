@@ -149,16 +149,17 @@ def main(root_dir):
                             if int(time/1000) == second:
                                 label = frame2emotion(sess, frame, centers, R)
                                 label_temp[label] += 1
-                                print("\rSecond: %d" % second, end='')
-                                print('')
                             else:
                                 label_second = np.argmax(label_temp)
                                 weights = label_temp[label_second]/sum(label_temp)
                                 second += 1
+                                print("\rSecond: %d" % second, end='')
                                 label_temp = np.zeros(EMOTION_NUM)
                                 f.write(str(label_second) + ',' + str(weights) + '\n')
 
                         count += 1
+
+                    print('')
 
 
 
