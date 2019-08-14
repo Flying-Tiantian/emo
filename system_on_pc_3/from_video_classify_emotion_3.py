@@ -113,6 +113,8 @@ def main(root_dir):
             crop_params = tuple(crop_params)
 
             features_dir = os.path.join(RESULT_PATH, person_dir, 'features_3')
+            if os.path.exists(features_dir):
+                shutil.rmtree(features_dir)
             os.makedirs(features_dir, exist_ok=True)
 
             generate_one_person_label_features(sess, os.path.join(root_dir, person_dir), features_dir)
@@ -127,9 +129,11 @@ def main(root_dir):
                 video_path = os.path.join(video_dir_path, video_name)
                 print("Processing video file %s..." % video_path)
 
-                emotion = video_name.split('.')[0]
+                emotion = video_name.split('.')[0].split('_')[0]
 
                 result_dir = os.path.join(RESULT_PATH, person_dir, 'result')
+                if os.path.exists(result_dir):
+                    shutil.rmtree(result_dir)
                 os.makedirs(result_dir, exist_ok=True)
                 save_path = os.path.join(result_dir, str(emotion) + '.cvs')
 
