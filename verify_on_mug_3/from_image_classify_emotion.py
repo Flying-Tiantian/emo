@@ -3,12 +3,12 @@ import sys
 import shutil
 import nltk
 import os
-import pprint
+from pprint import pprint
 import numpy as np
 import tensorflow as tf
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import classification_report
-from prepare_data import reindex_labels, get_example
+from prepare_data import reindex_labels, get_example, gen_list
 from extract_label_features import main as extract_label_features
 
 
@@ -100,10 +100,11 @@ def main(root_dir):
         # print("map variables")
         # persisted_result = sess.graph.get_tensor_by_name("Pooling1:0")
         # tf.add_to_collection(tf.GraphKeys.VARIABLES, persisted_result)
-        train_data_dir = os.path.join(root_dir, 'train_crop_eye_new')
-        test_data_dir = os.path.join(root_dir, 'test_crop_eye_new')
+        
+        data_dir = os.path.join(root_dir, 'test_crop_eye_new')
+        train_list, test_list = gen_list(data_dir)
 
-        # extract_label_features(train_data_dir, sess, PERSONS, RESULT_PATH)
+        extract_label_features(data_dir, sess, PERSONS, RESULT_PATH, train_list)
 
         center_R_dict = {}
         for person_name in os.listdir(RESULT_PATH):
@@ -119,11 +120,11 @@ def main(root_dir):
         true_list = []
         pred_list = []
         count = 0
-        print('Predict from dir %s...' % test_data_dir)
+        print('Predict from dir %s...' % data_dir)
         with open(result_file_path, 'w') as f:
             f.write('label, prediction\n')
             result_tensor = sess.graph.get_tensor_by_name("Pooling1:0")
-            for eye_image, label, person_name in get_example(test_data_dir):
+            for eye_image, label, person_name in get_example(data_dir, test_list):
                 if not person_name in center_R_dict:
                     continue
                 prediction = frame2emotion(sess, eye_image, *center_R_dict[person_name])
@@ -136,7 +137,7 @@ def main(root_dir):
 
         print('')
 
-        pprint(classification_report(true_list, pred_list, target_names=['positive', 'negtive', 'neutral']))
+        print(classification_report(true_list, pred_list, target_names=['positive', 'negtive', 'neutral']))
 
 
 
