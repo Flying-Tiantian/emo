@@ -8,8 +8,8 @@ import numpy as np
 import tensorflow as tf
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import classification_report
-from .prepare_data import reindex_labels, get_example
-from .extract_label_features import main as extract_label_features
+from prepare_data import reindex_labels, get_example
+from extract_label_features import main as extract_label_features
 
 
 
