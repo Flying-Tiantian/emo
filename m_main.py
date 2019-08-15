@@ -11,7 +11,8 @@ from inputs.dataset_gen import dataset_generator
 clas_models = {
     'mobilenet': Mobilenet_model,
     'mobilenet160': Mobilenet_160_model,
-    'mobilenet64': Mobilenet_64_model
+    'mobilenet64': Mobilenet_64_model,
+    'emo_model': emo_model
 }
 
 
