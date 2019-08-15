@@ -103,11 +103,14 @@ def main(root_dir):
         train_data_dir = os.path.join(root_dir, 'train_crop_eye_new')
         test_data_dir = os.path.join(root_dir, 'test_crop_eye_new')
 
-        extract_label_features(train_data_dir, sess, PERSONS, RESULT_PATH)
+        # extract_label_features(train_data_dir, sess, PERSONS, RESULT_PATH)
 
         center_R_dict = {}
         for person_name in os.listdir(RESULT_PATH):
-            center_R_dict[person_name] = load_kmeans_find_R(os.path.join(RESULT_PATH, person_name, FEATURES_DIR))
+            try:
+                center_R_dict[person_name] = load_kmeans_find_R(os.path.join(RESULT_PATH, person_name, FEATURES_DIR))
+            except:
+                pass
 
         result_file_path = os.path.join(RESULT_PATH, 'pre_result.csv')
 
@@ -119,6 +122,8 @@ def main(root_dir):
             f.write('label, prediction\n')
             result_tensor = sess.graph.get_tensor_by_name("Pooling1:0")
             for eye_image, label, person_name in get_example(test_data_dir):
+                if not person_name in center_R_dict:
+                    continue
                 prediction = frame2emotion(sess, eye_image, *center_R_dict[person_name])
                 true_list.append(label)
                 pred_list.append(prediction)
