@@ -6,8 +6,8 @@ from .image_preprocessing import preprocess_image
 PROPERTIES = {
     'num_classes': 3,
     'num_images': {
-        'train': 5055,
-        'val': 859,
+        'train': 5164,
+        'val': 750,
     }
 }
 
@@ -64,5 +64,5 @@ def input_fn(is_training,
     return dataset
 
 if __name__ == '__main__':
-    dataset = input_fn(False, 224, 16, 1)
+    dataset = input_fn(True, 28, 16, 1)
     pass
