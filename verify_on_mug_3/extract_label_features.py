@@ -40,6 +40,7 @@ def save_features(result_dir, person_features_dict):
         features_dir = os.path.join(result_dir, person_name, 'features_3')
         if os.path.exists(features_dir):
             shutil.rmtree(features_dir)
+        os.makedirs(features_dir)
         for label, features in enumerate(person_features_dict[person_name]):
             np.savetxt(os.path.join(features_dir, str(label)+'.txt'), features)
 
