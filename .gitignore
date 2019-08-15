@@ -1,6 +1,7 @@
 data
 .vscode
 /.vscode
+verify_on_fed_ck
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
