@@ -126,8 +126,8 @@ def siamese_net(y, phase_train, scope='sia_net'):
 class emo_model:
     def __init__(self, num_classes=3):
         self._num_classes = num_classes
-        self._name = 'LeNet'
-        self._default_input_size = 28
+        self._name = 'emo_net'
+        self._default_input_size = 32
 
     def get_name(self):
         return self._name
