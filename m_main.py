@@ -161,18 +161,18 @@ def train_and_eval():
 
 def define_flags():
     flags.DEFINE_enum(
-        name='task', default='mug_fed',
-        enum_values=['mug_fed', 'mug_fed_crop'],
+        name='task', default='mug_modified_3',
+        enum_values=['mug_fed', 'mug_fed_crop', 'mug_modified_3'],
         help='Which dataset to use, and what task to do.')
     flags.DEFINE_enum(
-        name='target_model', default='mobilenet160',
-        enum_values=['mobilenet', 'mobilenet160', 'mobilenet64'],
+        name='target_model', default='emo_model',
+        enum_values=['mobilenet', 'mobilenet160', 'mobilenet64', 'emo_model'],
         help='Which target model to use.')
     flags.DEFINE_boolean(
         name='eval_only', default=False,
         help='Skip training and only perform evaluation on the latest checkpoint.')
     flags.DEFINE_float(
-        name='weight_decay', short_name='wd', default=0.0,
+        name='weight_decay', short_name='wd', default=2e-4,
         help='Weight decay coefficient for l2 regularization.')
     flags.DEFINE_float(
         name='learning_rate', short_name='lr', default=0.001, lower_bound=0.0,
