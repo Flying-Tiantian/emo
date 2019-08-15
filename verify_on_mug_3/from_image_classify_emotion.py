@@ -125,7 +125,7 @@ def main(root_dir):
                 f.write('%d, &%d\n' % (label, prediction))
 
                 count += 1
-                print('\rDone: %d' % count)
+                print('\rDone: %d' % count, end='')
 
         print('')
 

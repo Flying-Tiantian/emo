@@ -28,7 +28,7 @@ def extract_label_features(sess, image_dir_path, persons):
         person_features_dict[person_name][label].append(feature)
 
         count += 1
-        print('\rDone: %d' % count)
+        print('\rDone: %d' % count, end='')
 
     print('')
 
@@ -40,7 +40,7 @@ def save_features(result_dir, person_features_dict):
         features_dir = os.path.join(result_dir, person_name, 'features_3')
         if os.path.exists(features_dir):
             shutil.rmtree(features_dir)
-        for label, features in person_features_dict[person_name]:
+        for label, features in enumerate(person_features_dict[person_name]):
             np.savetxt(os.path.join(features_dir, str(label)+'.txt'), features)
 
 
