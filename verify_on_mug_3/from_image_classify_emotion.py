@@ -107,6 +107,8 @@ def main(root_dir):
 
         center_R_dict = {}
         for person_name in os.listdir(RESULT_PATH):
+            if '.' in person_name:
+                continue
             try:
                 center_R_dict[person_name] = load_kmeans_find_R(os.path.join(RESULT_PATH, person_name, FEATURES_DIR))
             except:
@@ -140,4 +142,5 @@ def main(root_dir):
 
 
 if __name__ == '__main__':
-    main(sys.argv[1])
+    main('/home/tian/emo/data/mug_fed_data/')
+    # main(sys.argv[1])
